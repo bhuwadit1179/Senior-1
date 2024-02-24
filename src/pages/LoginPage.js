@@ -1,13 +1,14 @@
-import { Button, Container, Row, Col, Form, Card } from "react-bootstrap";
+import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import "./LoginPage.css";
 
 const LoginPage = ({ loginFunction }) => {
-  const auth = getAuth();
   const [ID, setID] = useState();
   const [password, setPassword] = useState();
+  const navigate = useNavigate();
 
   const handleIDChange = (event) => {
     setID(event.target.value);
@@ -15,7 +16,10 @@ const LoginPage = ({ loginFunction }) => {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
+  const navigateRegister = () => {
+    console.log("test register");
+    navigate("/register");
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -34,8 +38,8 @@ const LoginPage = ({ loginFunction }) => {
   return (
     <Container className="d-flex vh-100">
       <Row className="m-auto aligh-self-center w-50">
-        <Form className="border p-5" onSubmit={handleSubmit}>
-          <Form.Label className="text-center w-100">Login</Form.Label>
+        <Form className="border bg-light rounded-3 p-5" onSubmit={handleSubmit}>
+          <Form.Label className="text-center w-100 h2">Login</Form.Label>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -55,10 +59,17 @@ const LoginPage = ({ loginFunction }) => {
               onChange={handlePasswordChange}
             />
           </Form.Group>
-          <Row className="m-auto w-50">
-            <Button className="login-btn" type="submit">
-              Submit
-            </Button>
+          <Row className="m-auto w-75">
+            <Col>
+              <Button className="login-btn w-100" type="submit">
+                Login
+              </Button>
+            </Col>
+            <Col>
+              <Button className="login-btn w-100 " onClick={navigateRegister}>
+                Register
+              </Button>
+            </Col>
           </Row>
         </Form>
       </Row>
