@@ -4,6 +4,10 @@ import Dashboard from "./pages/DashboardPage";
 import "./App.css";
 import { useState } from "react";
 import { ThemeProvider } from "react-bootstrap";
+import firebaseConfig from "./firebase/config";
+import { initializeApp } from "firebase/app";
+
+const app = initializeApp(firebaseConfig);
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
