@@ -1,6 +1,7 @@
 import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import axios from "axios";
 import "./LoginPage.css";
@@ -8,6 +9,7 @@ import "./LoginPage.css";
 const LoginPage = ({ loginFunction }) => {
   const [ID, setID] = useState();
   const [password, setPassword] = useState();
+  const auth = getAuth();
   const navigate = useNavigate();
 
   const handleIDChange = (event) => {
@@ -23,13 +25,22 @@ const LoginPage = ({ loginFunction }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const loginData = { username: ID, password: password };
-      const response = await axios.post(
-        "http://localhost:3001/login",
-        loginData
-      );
-      console.log(response);
-      loginFunction();
+      signInWithEmailAndPassword(auth, ID, password);
+      // onLoginSuccess(); // Update App's login state
+      // navigate("/"); // Redirect after successful login
+      auth.currentUser.getIdToken(true).then(function (idToken) {
+        console.log(idToken);
+        const requestOptions = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+        };
+        fetch("http://localhost:3001/profile", requestOptions)
+          .then((response) => response.json())
+          .then((data) => loginFunction());
+      });
     } catch (error) {
       alert("Username and Password are not found");
     }
